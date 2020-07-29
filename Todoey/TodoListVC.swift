@@ -10,7 +10,7 @@ import UIKit
 
 class TodoListVC: UITableViewController {
 
-    let Array = ["1","2","3","4"]
+    var itemArray = ["1","2","3","4"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,12 +18,12 @@ class TodoListVC: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return Array.count
+        return itemArray.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TodoItemCell", for: indexPath)
-        cell.textLabel?.text = Array[indexPath.row]
+        cell.textLabel?.text = itemArray[indexPath.row]
         return cell
     }
     
@@ -39,9 +39,30 @@ class TodoListVC: UITableViewController {
     
         tableView.deselectRow(at: indexPath, animated: true)
        
-        //
-        //More Code Added
+        
         
 }
+    
+    @IBAction func addClicked(_ sender: UIBarButtonItem) {
+        var textField = UITextField()
+        let alert = UIAlertController(title: "Add new Todo item", message: "", preferredStyle: .alert)
+        
+        let action = UIAlertAction(title: "Add item", style: .default) { (action) in
+            
+            self.itemArray.append(textField.text!)
+            self.tableView.reloadData()
+        }
+        
+        alert.addAction(action)
+        alert.addTextField { (alertTextField) in
+            textField = alertTextField
+        }
+        
+        present(alert, animated: true, completion: nil)
+        
+        
+        
+    }
+    
 
 }

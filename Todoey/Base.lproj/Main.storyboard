@@ -6,7 +6,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Todo ListVC-->
+        <!--Todo App-->
         <scene sceneID="Fmb-oZ-DC6">
             <objects>
                 <tableViewController id="aAP-cZ-dxX" customClass="TodoListVC" customModule="Todoey" customModuleProvider="target" sceneMemberID="viewController">
@@ -30,7 +30,14 @@
                             <outlet property="delegate" destination="aAP-cZ-dxX" id="6eC-gZ-eJv"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="woe-56-7XM"/>
+                    <navigationItem key="navigationItem" title="Todo App" id="woe-56-7XM">
+                        <barButtonItem key="rightBarButtonItem" title="Item" image="plus" catalog="system" id="UiA-fN-7GJ">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <connections>
+                                <action selector="addClicked:" destination="aAP-cZ-dxX" id="DcG-NA-P29"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BEe-Eq-ybi" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -59,4 +66,7 @@
             <point key="canvasLocation" x="92.753623188405811" y="148.66071428571428"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="plus" catalog="system" width="128" height="113"/>
+    </resources>
 </document>
