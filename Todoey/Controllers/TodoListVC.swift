@@ -11,30 +11,17 @@ import UIKit
 class TodoListVC: UITableViewController {
 
     var itemArray = [Items]()
-     var udefs = UserDefaults.standard
+    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
+       
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let newItem = Items()
-        newItem.title = "Find Mike"
-        itemArray.append(newItem)
-        
-        let newItem2 = Items()
-               newItem2.title = "Find Mike23432"
-               itemArray.append(newItem2)
-        
-        let newItem3 = Items()
-               newItem3.title = "Find Mike9999999"
-        newItem3.selected = true
-               itemArray.append(newItem3)
-        
-        
-        
-        
-      //  if let items = udefs.array(forKey: "TodoListArray") as? [String]{
-       //     itemArray = items
-       // }
+         
+        if let path = dataFilePath{
+        print(path)
+        }
+       loadItems()
         
        
     }
@@ -49,11 +36,7 @@ class TodoListVC: UITableViewController {
         let item = itemArray[indexPath.row]
         cell.textLabel?.text = item.title
         
-        if item.selected == true{
-            cell.accessoryType = .checkmark
-        }else{
-            cell.accessoryType = .none
-        }
+        cell.accessoryType = item.selected == true ? .checkmark : .none
         
         return cell
     }
@@ -66,8 +49,15 @@ class TodoListVC: UITableViewController {
       
         itemArray[indexPath.row].selected = !itemArray[indexPath.row].selected
         
-        tableView.reloadData()
-        
+          let encoder = PropertyListEncoder()
+                 
+                 do{
+                 let data = try encoder.encode(self.itemArray)
+                     try data.write(to: self.dataFilePath!)
+                 }catch{
+                     
+                 }
+                 self.tableView.reloadData()
     
         tableView.deselectRow(at: indexPath, animated: true)
        
@@ -85,9 +75,8 @@ class TodoListVC: UITableViewController {
             newItem.title = textField.text!
             
             self.itemArray.append(newItem)
-            self.udefs.set(self.itemArray, forKey: "TodoListArray")
-           
-            self.tableView.reloadData()
+            self.saveItems()
+         
         }
         
         alert.addAction(action)
@@ -101,5 +90,30 @@ class TodoListVC: UITableViewController {
         
     }
     
-
+    
+    func saveItems(){
+        let encoder = PropertyListEncoder()
+                 
+                 do{
+                 let data = try encoder.encode(itemArray)
+                     try data.write(to: dataFilePath!)
+                 }catch{
+                     
+                 }
+                 self.tableView.reloadData()
+    }
+    
+    func loadItems(){
+        if let data = try? Data(contentsOf: dataFilePath!){
+        
+        let decoder = PropertyListDecoder()
+        
+        do{
+            itemArray = try decoder.decode([Items].self, from: data)
+        }catch{
+            
+        }
+        
+    }
+    }
 }

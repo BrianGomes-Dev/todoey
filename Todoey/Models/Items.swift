@@ -8,7 +8,7 @@
 
 import Foundation
 
-class Items{
+class Items:Codable{
     var title:String = ""
     var selected:Bool = false
     
