@@ -11,7 +11,14 @@ import CoreData
 
 class TodoListVC: UITableViewController {
 
+    @IBOutlet weak var searchBar: UISearchBar!
+    
     var itemArray = [Items]()
+    var selectedCategory:Category?{
+        didSet{
+            loadItems()
+        }
+    }
   //  let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
@@ -19,7 +26,7 @@ class TodoListVC: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-         
+        searchBar.delegate = self
       print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
      loadItems()
         
@@ -67,11 +74,17 @@ class TodoListVC: UITableViewController {
             let newItem = Items(context: self.context)
             newItem.title = textField.text!
             newItem.done = false
+            newItem.parentCategory = self.selectedCategory
             
             self.itemArray.append(newItem)
             self.saveItems()
          
         }
+        
+        alert.addAction(UIAlertAction(title: "Cancel",
+                                      style: UIAlertAction.Style.cancel,
+                                            handler: {(_: UIAlertAction!) in
+              }))
         
         alert.addAction(action)
         alert.addTextField { (alertTextField) in
@@ -96,14 +109,50 @@ class TodoListVC: UITableViewController {
                  self.tableView.reloadData()
     }
     
-    func loadItems(){
+    func loadItems(with request:NSFetchRequest<Items> = Items.fetchRequest(),predicate: NSPredicate? = nil){
 
-        let request : NSFetchRequest<Items> = Items.fetchRequest()
+        let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
+        
+        if let additionalPredicate = predicate {
+            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate,additionalPredicate])
+        }else{
+            request.predicate = categoryPredicate
+        }
         
         do{
         itemArray = try context.fetch(request)
         }catch{
             print("Error fetching data from context: ",error)
         }
+        
+        tableView.reloadData()
     }
+}
+
+// MARK :- Search bar Methods
+extension TodoListVC: UISearchBarDelegate{
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        
+        let request : NSFetchRequest<Items> = Items.fetchRequest()
+        
+     let predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
+        
+        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+        
+        loadItems(with: request,predicate: predicate)
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchBar.text?.count == 0{
+            
+            loadItems()
+            
+            DispatchQueue.main.async {
+                searchBar.resignFirstResponder()
+            }
+            
+        }
+    }
+    
 }
