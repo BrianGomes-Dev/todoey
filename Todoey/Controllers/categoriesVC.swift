@@ -62,6 +62,10 @@ func loadCategories(){
               do {
                   try self.realm.write {
                       self.realm.delete(categoryForDeletion)
+                    
+                    //UPDATE CATEGORY
+           //self.realm.write("Your Category Name")
+                    
                   }
               } catch {
                   print("Error deleting category, \(error)")
