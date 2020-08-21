@@ -8,8 +8,9 @@
 
 import UIKit
 import RealmSwift
+import ChameleonFramework
 
-class TodoListVC: UITableViewController {
+class TodoListVC: SwipeTableVC {
 
     @IBOutlet weak var searchBar: UISearchBar!
     
@@ -28,8 +29,33 @@ class TodoListVC: UITableViewController {
         searchBar.delegate = self
       print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
      loadItems()
+        tableView.separatorStyle = .none
         
+   
        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+             if let  colorHex = selectedCategory?.color{
+                title = selectedCategory?.name
+               navigationController?.navigationBar.barTintColor = UIColor(hexString: colorHex)
+                
+                guard let navBar = navigationController?.navigationBar else {fatalError("Navigation Controller does not exist.")}
+                  
+                
+                if let navBarColor = UIColor(hexString: colorHex){
+                    
+                    navBar.barTintColor = navBarColor
+                    
+                    navBar.tintColor = ContrastColorOf(navBarColor, returnFlat: true)
+                    navBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : ContrastColorOf(navBarColor, returnFlat: true)]
+                    
+                    searchBar.barTintColor = navBarColor
+                    searchBar.searchTextField.backgroundColor = ContrastColorOf(navBarColor, returnFlat: true)
+                    
+                    
+                }
+           }
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -37,21 +63,34 @@ class TodoListVC: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "TodoItemCell", for: indexPath)
         
-        if let item = todoItems?[indexPath.row] {
-        cell.textLabel?.text = item.title
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
         
-        cell.accessoryType = item.done == true ? .checkmark : .none
-        }else{
-            cell.textLabel?.text = "No Items Added."
+        if let item = todoItems?[indexPath.row]{
+            
+            cell.textLabel?.text = item.title
+            
+            if let color = UIColor(hexString: selectedCategory!.color)?.darken(byPercentage: CGFloat(indexPath.row) / CGFloat(todoItems!.count)){
+                
+                cell.backgroundColor = color
+                
+                cell.textLabel?.textColor = ContrastColorOf(color, returnFlat: true)
+                
+            }
+            
+            
         }
+        
+        cell.textLabel?.text = todoItems?[indexPath.row].title ?? "No items added yet."
+        
+        
+         
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     
-        
+        print("Tapped")
         //REALM
         
         if let item = todoItems?[indexPath.row]{
@@ -63,6 +102,7 @@ class TodoListVC: UITableViewController {
                     
                     //realm update functionality
                     item.done = !item.done
+                       print("Tapped")
                 }
                 
             }catch{
@@ -89,6 +129,23 @@ class TodoListVC: UITableViewController {
         tableView.deselectRow(at: indexPath, animated: true)
      
 }
+    
+    
+    //MARK:- DELETE DATA FROM SWIPE
+
+    override func updateModel(at indexPath: IndexPath) {
+        if let itemForDeletion = self.todoItems?[indexPath.row] {
+              do {
+                  try self.realm.write {
+                      self.realm.delete(itemForDeletion)
+                  }
+              } catch {
+                  print("Error deleting category, \(error)")
+              }
+          }
+      }
+    
+    
     
     @IBAction func addClicked(_ sender: UIBarButtonItem) {
         var textField = UITextField()

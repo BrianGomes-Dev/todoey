@@ -8,8 +8,9 @@
 
 import UIKit
 import RealmSwift
+import ChameleonFramework
 
-class categoriesVC: UITableViewController {
+class categoriesVC: SwipeTableVC {
 
     let realm = try! Realm()
     var categories : Results<Category>?
@@ -19,8 +20,20 @@ class categoriesVC: UITableViewController {
 
       loadCategories()
         
+        tableView.separatorStyle = .none
+      
+       
+        
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+          guard let navBar = navigationController?.navigationBar else {fatalError("Navigation Controller does not exist.")}
+        
+        
+        
+        navBar.backgroundColor = UIColor(hexString: "1D9BF6")
+        
+    }
     
     func save(category:Category){
         
@@ -42,8 +55,23 @@ func loadCategories(){
         tableView.reloadData()
     }
     
+//MARK:- DELETE DATA FROM SWIPE
+
+    override func updateModel(at indexPath: IndexPath) {
+          if let categoryForDeletion = self.categories?[indexPath.row] {
+              do {
+                  try self.realm.write {
+                      self.realm.delete(categoryForDeletion)
+                  }
+              } catch {
+                  print("Error deleting category, \(error)")
+              }
+          }
+      }
     
     
+    
+  //MARK:- ADD NEW CATEGORIES
     @IBAction func addPressed(_ sender: UIBarButtonItem) {
         var textField = UITextField()
         let alert = UIAlertController(title: "Add new Category", message: "", preferredStyle: .alert)
@@ -52,7 +80,7 @@ func loadCategories(){
             
             let newCategory = Category()
             newCategory.name = textField.text!
-            
+            newCategory.color = UIColor.randomFlat().hexValue()
 
             self.save(category: newCategory)
             
@@ -81,13 +109,27 @@ func loadCategories(){
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-          let cell = tableView.dequeueReusableCell(withIdentifier: "categoryCell", for: indexPath)
+
               
-        cell.textLabel?.text = categories?[indexPath.row].name ?? "No categories added yet."
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
+        cell.selectionStyle = .none
+        if let category = categories?[indexPath.row]{
+            
+            cell.textLabel?.text = category.name
+            
+            guard let categoryColor = UIColor(hexString: category.color) else {
+                fatalError()
+            }
+            
+
+            cell.backgroundColor = UIColor(hexString: category.color)
+            cell.textLabel?.textColor = ContrastColorOf(categoryColor, returnFlat: true)
+            
+        }
+        
               
-      //        cell.accessoryType = item.done == true ? .checkmark : .none
               
-              return cell
+      return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -106,3 +148,4 @@ func loadCategories(){
     
     
 }
+

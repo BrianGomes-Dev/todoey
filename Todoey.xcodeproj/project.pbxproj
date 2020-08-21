@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0545224B24DAB235005A5ADD /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0545224A24DAB235005A5ADD /* Category.swift */; };
 		0545224D24DAB292005A5ADD /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0545224C24DAB292005A5ADD /* Item.swift */; };
+		05B266A624E6974500E7A936 /* SwipeTableVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05B266A524E6974500E7A936 /* SwipeTableVC.swift */; };
 		05CEC74624D96F300017CB93 /* categoriesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05CEC74524D96F300017CB93 /* categoriesVC.swift */; };
 		8E1A50157D43D93BCD43A82B /* Pods_Todoey.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D9FB9055DD4312B5D078E13 /* Pods_Todoey.framework */; };
 		EB2BE4FA239524DB00FB933B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB2BE4F9239524DB00FB933B /* AppDelegate.swift */; };
@@ -21,6 +22,7 @@
 /* Begin PBXFileReference section */
 		0545224A24DAB235005A5ADD /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
 		0545224C24DAB292005A5ADD /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
+		05B266A524E6974500E7A936 /* SwipeTableVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeTableVC.swift; sourceTree = "<group>"; };
 		05CEC74524D96F300017CB93 /* categoriesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = categoriesVC.swift; sourceTree = "<group>"; };
 		3909E331EDEB9C84FE6499B5 /* Pods-Todoey.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Todoey.debug.xcconfig"; path = "Target Support Files/Pods-Todoey/Pods-Todoey.debug.xcconfig"; sourceTree = "<group>"; };
 		6D9FB9055DD4312B5D078E13 /* Pods_Todoey.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Todoey.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -69,6 +71,7 @@
 			children = (
 				05CEC74524D96F300017CB93 /* categoriesVC.swift */,
 				EB2BE4FD239524DB00FB933B /* TodoListVC.swift */,
+				05B266A524E6974500E7A936 /* SwipeTableVC.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -248,6 +251,7 @@
 				05CEC74624D96F300017CB93 /* categoriesVC.swift in Sources */,
 				EB2BE4FE239524DB00FB933B /* TodoListVC.swift in Sources */,
 				EB2BE4FA239524DB00FB933B /* AppDelegate.swift in Sources */,
+				05B266A624E6974500E7A936 /* SwipeTableVC.swift in Sources */,
 				0545224B24DAB235005A5ADD /* Category.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
